@@ -95,10 +95,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.parse(
-        "postgresql://postgres:FpdCmGNUgtnTZniKjMGMvrAcJWhZqUGJ@metro.proxy.rlwy.net:37613/railway",
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'FpdCmGNUgtnTZniKjMGMvrAcJWhZqUGJ',
+        'HOST': 'metro.proxy.rlwy.net',
+        'PORT': '37613',
+    }
 }
 
 
@@ -132,7 +136,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL = 'accounts.CustomUser'  # Agar CustomUser accounts ilovasida bo'lsa
 
 
 # Static files (CSS, JavaScript, Images)
@@ -149,3 +153,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redisning joylashuvi
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
