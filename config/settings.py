@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+import os
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,7 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+
+    #apps
     'payments',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -74,17 +82,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'qabul_db',
-        'USER': 'postgres',
-        'PASSWORD': 'yourpassword',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'qabul_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'yourpassword',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
+
+DATABASES = {
+    'default': dj_database_url.parse(
+        "postgresql://postgres:FpdCmGNUgtnTZniKjMGMvrAcJWhZqUGJ@metro.proxy.rlwy.net:37613/railway",
+        conn_max_age=600
+    )
+}
 
 
 # Password validation
@@ -116,6 +131,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 
 # Static files (CSS, JavaScript, Images)
