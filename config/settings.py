@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from datetime import timedelta
+
 import os
 import dj_database_url
 
@@ -42,11 +44,30 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework_simplejwt',
 
     #apps
     'payments',
     'accounts',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # Access token muddati
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token muddati
+    'ROTATE_REFRESH_TOKENS': True,  # Har safar refresh qilganda yangi token yaratilsinmi?
+    'BLACKLIST_AFTER_ROTATION': True,  # Eski refresh token ishlatilmasin
+    'ALGORITHM': 'HS256',  # Token shifrlash algoritmi
+    'SIGNING_KEY': SECRET_KEY,  # Tokenlarni imzolash uchun maxfiy kalit
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Token yuborishda ishlatiladigan header turi
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

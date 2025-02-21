@@ -8,5 +8,5 @@ class CustomUser(AbstractUser):
     city = models.CharField(max_length=150)
     birth_date = models.DateField()
 
-    # USERNAME_FIELD = 'phone_number'
+    USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'city', 'birth_date']
