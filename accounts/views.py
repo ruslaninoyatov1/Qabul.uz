@@ -5,8 +5,8 @@ from rest_framework import generics, permissions, exceptions, status
 from rest_framework.response import Response
 
 
-from .models import CustomUser
-from .serializers import CustomUserSerializer, CustomUserRetrieveSerializer
+from .models import CustomUser, Branch, City
+from .serializers import CustomUserSerializer, CustomUserRetrieveSerializer, BranchSerializer, CitySerializer
 # Create your views here.
 
 
@@ -42,6 +42,17 @@ class UserProfileView(generics.RetrieveAPIView, generics.UpdateAPIView):
             raise exceptions.AuthenticationFailed("Foydalanuvchi autenfikatsiyadan qilinmagan.")
         return user
 
+
+class BranchAPIView(generics.ListCreateAPIView):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
+    permission_classes = [permissions.IsAdminUser]
+    
+
+class CityAPIView(generics.ListCreateAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 

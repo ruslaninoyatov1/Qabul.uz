@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     #apps
     'payments',
     'accounts',
+    'applications',
 ]
 
 
@@ -115,15 +116,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # }
 
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'FpdCmGNUgtnTZniKjMGMvrAcJWhZqUGJ',
-        'HOST': 'metro.proxy.rlwy.net',
-        'PORT': '37613',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://postgres:ZQpjoXPwQKFyNEvlsdQiIJwxZbhgWzQY@turntable.proxy.rlwy.net:50318/railway'
+    )
 }
 
 
