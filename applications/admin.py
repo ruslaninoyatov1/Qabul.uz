@@ -6,7 +6,7 @@ from .models import Application, Document
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ['owner', 'branch', 'city','uploaded_date', 'status']
+    list_display = ['owner', 'branch', 'city','uploaded_date', 'status', 'time_to_come', 'location']
 
 
 @admin.register(Document)

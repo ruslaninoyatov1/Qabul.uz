@@ -22,7 +22,7 @@ class ApplicationRetrieveSerializer(serializers.ModelSerializer):
     city_name = serializers.CharField(source='city.name', read_only=True)
     class Meta:
         model = Application
-        fields = ['id', 'owner', 'owner_username', 'documents', 'uploaded_date', 'status', 'branch', 'branch_name', 'city', 'city_name', 'reason']
+        fields = ['id', 'owner', 'owner_username', 'documents', 'uploaded_date', 'status', 'branch', 'branch_name', 'city', 'city_name', 'reason', 'time_to_come', 'location']
 
 
 

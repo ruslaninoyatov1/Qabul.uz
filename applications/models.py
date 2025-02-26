@@ -32,6 +32,7 @@ class Application(models.Model):
     uploaded_date = models.DateTimeField(auto_now_add=True, verbose_name="Yuklangan sana")
     status = models.CharField(max_length=100, choices=DOCUMENT_STATUS, verbose_name="Holat")
     reason = models.TextField(verbose_name="Rad etish sababi", null=True, blank=True)
+    location = models.CharField(max_length=200, null=True, blank=True, verbose_name="Manzil")
     time_to_come = models.DateTimeField(null=True, blank=True, verbose_name="Vaqtni belgilash")
 
     def clean(self):
