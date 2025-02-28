@@ -7,9 +7,16 @@ from rest_framework.response import Response
 
 from .models import CustomUser, Branch, City
 from .serializers import CustomUserSerializer, CustomUserRetrieveSerializer, BranchSerializer, CitySerializer
+
+from drf_spectacular.utils import extend_schema
 # Create your views here.
 
 
+@extend_schema(
+    summary="Ro'yxatdan o'tish.",
+    description="Foydalanuvchi ro'yxatga oladi.",
+    methods=['POST']
+)
 class UserRegistrationView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -26,12 +33,22 @@ class UserRegistrationView(generics.CreateAPIView):
         )
 
 
+@extend_schema(
+    summary="Foydalanuvchilarni qaytaradi",
+    description="Foydalanuvchilar ro'yxatini qaytaradi va yaratadi.",
+    methods=['GET', 'POST']
+)
 class UserListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.IsAdminUser, permissions.IsAuthenticated]
 
 
+@extend_schema(
+    summary="Foydalanuvchi profili",
+    description="Foydalanuvchi qaytaradi va yangilaydi",
+    methods=['GET', 'PUT']
+)
 class UserProfileView(generics.RetrieveAPIView, generics.UpdateAPIView):
     serializer_class = CustomUserRetrieveSerializer
     permission_classes = [permissions.IsAuthenticated, ]
@@ -43,12 +60,22 @@ class UserProfileView(generics.RetrieveAPIView, generics.UpdateAPIView):
         return user
 
 
+@extend_schema(
+    summary="Filiallarni qaytaradi.",
+    description="Filiallarni qaytaradi va yaratadi.",
+    methods=['GET', 'POST']
+)
 class BranchAPIView(generics.ListCreateAPIView):
     queryset = Branch.objects.all()
     serializer_class = BranchSerializer
     permission_classes = [permissions.IsAdminUser]
     
 
+@extend_schema(
+    summary="Shaharlarni qaytaradi",
+    description="Shaharlarni qaytaradi va yaratadi.",
+    methods=['GET', 'POST']
+)
 class CityAPIView(generics.ListCreateAPIView):
     queryset = City.objects.all()
     serializer_class = CitySerializer

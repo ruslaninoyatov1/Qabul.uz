@@ -15,3 +15,13 @@ class IsGovernmentOfficer(BasePermission):
 class IsBranchAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == "branch_admin"
+    
+
+class IsCustomer(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'customer'
+    
+
+class IsBranchBoss(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == "branch_boss"

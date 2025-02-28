@@ -25,7 +25,7 @@ class Application(models.Model):
         ("Rad etildi", "Rad etildi")
     ]
 
-    documents = models.ManyToManyField(Document, verbose_name='Hujjatlar')
+    documents = models.ManyToManyField(Document, verbose_name='Hujjatlar', related_name="applications")
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Filial")
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='Shahar')

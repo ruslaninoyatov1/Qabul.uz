@@ -1,12 +1,17 @@
 from django.contrib import admin
 
-from .models import CustomUser, Branch, City
+from .models import CustomUser, Branch, City, CustomRole
 # Register your models here.
+
+
+@admin.register(CustomRole)
+class CustomRoleAdmin(admin.ModelAdmin):
+    list_display = ['name', ]
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'first_name', 'last_name', 'city', 'birth_date']
+    list_display = ['username', 'first_name', 'last_name', 'city', 'birth_date', 'role']
 
 
 @admin.register(Branch)
