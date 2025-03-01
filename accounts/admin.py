@@ -11,7 +11,7 @@ class CustomRoleAdmin(admin.ModelAdmin):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'first_name', 'last_name', 'city', 'birth_date', 'role']
+    list_display = ['username', 'first_name', 'last_name', 'city', 'birth_date', 'role', "telegram_name"]
 
 
 @admin.register(Branch)
@@ -22,4 +22,18 @@ class BranchAdmin(admin.ModelAdmin):
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
     list_display = ['name', ]
+
+
+# from django.contrib import admin
+# from django_db_logger.models import StatusLog
+# admin.site.unregister(StatusLog)
+#
+#
+# @admin.register(StatusLog)
+# class StatusLogAdmin(admin.ModelAdmin):
+#     list_display = ('create_datetime', 'level', 'msg', 'trace')
+#     list_filter = ('level', 'create_datetime', "logger_name")
+#     search_fields = ('msg',)
+
+
 

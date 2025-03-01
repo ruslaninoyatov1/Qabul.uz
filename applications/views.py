@@ -100,7 +100,7 @@ class DocumentAPIView(generics.ListCreateAPIView):
         user = self.request.user
         if user.role.name in [CustomRole.BRANCH_ADMIN, CustomRole.BRANCH_BOSS]:
             serializer.save(branch=user.branch, city=user.branch.city)
-        if user.role == CustomUser.CUSTOMER:
+        if user.role == CustomUser.role.name.CUSTOMER:
             serializer.save(owner=user, branch=user.branch, city=user.branch.city)
         else:
             serializer.save()

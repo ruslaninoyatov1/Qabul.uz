@@ -47,11 +47,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'drf_spectacular',
+    # 'django_db_logger',
 
     #apps
     'payments',
     'accounts',
     'applications',
+    'logs'
 ]
 
 
@@ -81,6 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'logs.middleware.RequestMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -107,24 +110,53 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'qabul_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'yourpassword',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:ZQpjoXPwQKFyNEvlsdQiIJwxZbhgWzQY@turntable.proxy.rlwy.net:50318/railway'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'kimdur_db',
+        'USER': 'kimdur_user',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "logs/notifications.log",
+            "formatter": "verbose",
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}
+
+
+
+
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://postgres:ZQpjoXPwQKFyNEvlsdQiIJwxZbhgWzQY@turntable.proxy.rlwy.net:50318/railway'
+#     )
+# }
 
 
 # Password validation

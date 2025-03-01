@@ -1,15 +1,13 @@
 from django.shortcuts import render
-
 from rest_framework import generics, permissions, exceptions, status
 # from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-
-
 from .models import CustomUser, Branch, City
 from .serializers import CustomUserSerializer, CustomUserRetrieveSerializer, BranchSerializer, CitySerializer
-
+from logs.models import LogEntry
+from logs.middleware import get_client_ip
 from drf_spectacular.utils import extend_schema
-# Create your views here.
+
 
 
 @extend_schema(
@@ -23,9 +21,20 @@ class UserRegistrationView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny, ]
 
     def create(self, request, *args, **kwargs):
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        user = serializer.save()
+        ip_address = get_client_ip(request)
+
+        LogEntry.objects.create(
+            user=user,
+            object_id=user.id,
+            model_name="customuser",
+            action="Created",
+            app_name="Accounts",
+            ip_address=ip_address
+        )
 
         return Response(
             {'message': "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi.", "user": serializer.data},
