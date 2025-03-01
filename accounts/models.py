@@ -33,24 +33,44 @@ class Branch(models.Model):
         return super().save(*args, **kwargs)
 
 
-class CustomUser(AbstractUser):
+# class CustomRole(models.Model):
+#     name = models.CharField(max_length=50, unique=True)
+#     permissions = models.ManyToManyField(Permission, blank=True)
+
+#     def __str__(self):
+#         return self.name
+
+
+class CustomRole(models.Model):
     SUPER_ADMIN = "super_admin"
     BANK_OPERATOR = "bank_operator"
     GOVERNMENT_OFFICER = "government_officer"
     BRANCH_ADMIN = "branch_admin"
+    STAFF_USER = "admin"
+    BRANCH_BOSS = "branch_boss"
+    CUSTOMER = "customer"
 
     ROLE_CHOICES = (
         (SUPER_ADMIN, "Super Admin"),
         (BANK_OPERATOR, "Bank Operator"),
         (GOVERNMENT_OFFICER, "Davlat Xodimi"),
         (BRANCH_ADMIN, "Filial Admin"),
+        (STAFF_USER, "Admin"),
+        (BRANCH_BOSS, "Filial boshlig'i"),
+        (CUSTOMER, "Foydalanuvchi")
     )
+    name = models.CharField(max_length=200, choices=ROLE_CHOICES)
 
+    def __str__(self):
+        return self.name
+
+
+class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=20, unique=True, verbose_name="Telefon raqam")
     city = models.CharField(max_length=150, verbose_name="Hudud")
     birth_date = models.DateField(verbose_name="Tug'ilgan sana")
     is_paid = models.BooleanField(default=False)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=GOVERNMENT_OFFICER)
+    role = models.ForeignKey(CustomRole, on_delete=models.SET_NULL, null=True, blank=True)
     branch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, blank=True)
 
     USERNAME_FIELD = 'phone_number'
