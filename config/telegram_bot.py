@@ -1,6 +1,7 @@
 from telegram import Update
-from telegram.ext import Application, CommandHandler, CallbackContext
+from telegram.ext import Application, CommandHandler, CallbackContext, MessageHandler, filters
 from django.contrib.auth import get_user_model
+import asyncio
 
 User = get_user_model()
 TOKEN = "7408258357:AAF-NDdLcL8g6mhAuc9cU7zHoXOvcV49jAA"
@@ -17,9 +18,8 @@ async def start(update: Update, context: CallbackContext):
     chat_id = str(chat_id)  # Chat ID
     telegram_name = user if user else f"tg_user_{user.id}"
 
-    user_obj, created = User.objects.get_or_create(
-        telegram_name=telegram_name,
-        defaults={"chat_id": chat_id}
+    user_obj, created = await asyncio.to_thread(
+        lambda: User.objects.get_or_create(username=user, defaults={"chat_id": chat_id})
     )
 
     if not created:
@@ -33,8 +33,11 @@ async def start(update: Update, context: CallbackContext):
 
 async def main():
     app = Application.builder().token(TOKEN).build()
-
-    app.add_handler(CommandHandler("/start", start))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, start))
 
     print("Bot ishga tushdi...")
     await app.run_polling()
+
+if __name__ == "__main__":
+    asyncio.run(main())
