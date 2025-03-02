@@ -4,7 +4,6 @@ from celery import shared_task
 from django.contrib.auth import get_user_model
 from .utils import send_email_notification, send_telegram_notification, save_user_chat_id
 
-# Django sozlamalarini to'g'ri import qilish
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 app = Celery('qabul', broker='redis://localhost:6379/0')
@@ -38,26 +37,20 @@ User = get_user_model()
 
 @shared_task
 def send_email_async(user_id, subject, message):
-    """
-    Foydalanuvchiga email yuboruvchi asinxron Celery vazifasi.
-    """
+
     user = User.objects.get(id=user_id)
     send_email_notification(user, subject, message)
 
 
 @shared_task
 def send_telegram_async(user_id, message):
-    """
-    Foydalanuvchiga Telegram xabar yuboruvchi asinxron Celery vazifasi.
-    """
+
     user = User.objects.get(id=user_id)
     send_telegram_notification(user, message)
 
 
 @shared_task
 def save_chat_id_task(user_id, chat_id):
-    """
-    Celery vazifasi: Foydalanuvchining chat ID sini saqlaydi.
-    """
+
     save_user_chat_id(user_id, chat_id)
 

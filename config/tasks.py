@@ -33,6 +33,7 @@ import logging
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
+
 @shared_task
 def save_chat_id_task(user_id, chat_id):
     """

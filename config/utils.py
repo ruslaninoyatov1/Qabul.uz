@@ -47,9 +47,7 @@ def send_telegram_notification(user, message):
 
 
 def save_user_chat_id(user_id, chat_id):
-    """
-    Foydalanuvchining Telegram chat ID sini bazaga saqlaydi.
-    """
+
     try:
         user = User.objects.filter(id=user_id).first()
         if user:
