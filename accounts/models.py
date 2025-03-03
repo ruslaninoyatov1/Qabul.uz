@@ -72,6 +72,9 @@ class CustomUser(AbstractUser):
     is_paid = models.BooleanField(default=False)
     role = models.ForeignKey(CustomRole, on_delete=models.SET_NULL, null=True, blank=True)
     branch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, blank=True)
+    chat_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
+    telegram_name = models.CharField(max_length=150, unique=True, blank=True, null=True)
+    user_name = None
 
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'city', 'birth_date']
