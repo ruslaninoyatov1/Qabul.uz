@@ -2,8 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, exceptions, status
 # from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import CustomUser, Branch, City
-from .serializers import CustomUserSerializer, CustomUserRetrieveSerializer, BranchSerializer, CitySerializer
+from .serializers import CustomUserSerializer, CustomUserRetrieveSerializer, BranchSerializer, CitySerializer, CustomUserLoginSerializer
 from logs.models import LogEntry
 from logs.middleware import get_client_ip
 from drf_spectacular.utils import extend_schema
@@ -40,6 +41,17 @@ class UserRegistrationView(generics.CreateAPIView):
             {'message': "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi.", "user": serializer.data},
             status = status.HTTP_201_CREATED
         )
+    
+
+class UserLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = CustomUserLoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema(

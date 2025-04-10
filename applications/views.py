@@ -24,7 +24,7 @@ import os
 class ApplicationAPIView(generics.ListCreateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-    permission_classes = [permissions.IsAuthenticated, IsGovernmentOfficer | IsBranchAdmin | IsCustomer]
+    permission_classes = [permissions.IsAuthenticated, IsGovernmentOfficer | IsBranchAdmin | IsCustomer | permissions.IsAdminUser]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['branch', 'city', 'status']
     search_fields = ['branch', 'city', 'status']
@@ -33,18 +33,19 @@ class ApplicationAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == CustomUser.BRANCH_ADMIN:
+        if user.role and user.role.name == CustomRole.BRANCH_ADMIN:
             return Application.objects.filter(branch=user.branch)
-        elif user.role == CustomUser.CUSTOMER:
+        elif user.role and user.role.name == CustomRole.CUSTOMER:
             return Application.objects.filter(user=user)
         return Application.objects.all()
 
     def perform_create(self, serializer):
         user = self.request.user
-        if user.role == CustomUser.BRANCH_ADMIN:
+        if user.role and user.role.name == CustomRole.BRANCH_ADMIN:
             serializer.save(branch=user.branch, city=user.branch.city)
         else:
             serializer.save(user=user)
+
 
 
 @extend_schema(
@@ -54,30 +55,35 @@ class ApplicationAPIView(generics.ListCreateAPIView):
 class ApplicationRetrieveAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationRetrieveSerializer
-    permission_classes = [permissions.IsAdminUser, permissions.IsAuthenticated | IsGovernmentOfficer | IsBranchAdmin | IsCustomer]
+    permission_classes = [permissions.IsAuthenticated, IsGovernmentOfficer | IsBranchAdmin | IsCustomer | permissions.IsAdminUser]
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == CustomUser.BRANCH_ADMIN:
+        if user.role and user.role.name == CustomRole.BRANCH_ADMIN:
             return Application.objects.filter(branch=user.branch)
         return Application.objects.all()
     
     def perform_update(self, serializer):
         user = self.request.user
         application = self.get_object()
-        if user.role == CustomUser.BRANCH_ADMIN and application.branch != user.branch:
+        # Filial Admin uchun ruxsatlar
+        if user.role and user.role.name == CustomRole.BRANCH_ADMIN and application.branch != user.branch:
             raise PermissionDenied("Siz faqat o'z filialingizdagi arizalarni o'zgartira olasiz.")
-        elif user.role == CustomUser.CUSTOMER and application.user != user:
-            raise PermissionDenied("Siz faqat o'zingizga tegishli bo'lgan ariza-larni o'zgartira olasiz.")
+        # Customer uchun ruxsatlar
+        elif user.role and user.role.name == CustomRole.CUSTOMER and application.user != user:
+            raise PermissionDenied("Siz faqat o'zingizga tegishli bo'lgan arizalarni o'zgartira olasiz.")
         serializer.save()
 
     def perform_destroy(self, instance):
         user = self.request.user
-        if user.role == CustomUser.BRANCH_ADMIN and instance.branch != user.branch:
+        # Filial Admin uchun ruxsatlar
+        if user.role and user.role.name == CustomRole.BRANCH_ADMIN and instance.branch != user.branch:
             raise PermissionDenied("Siz faqat o'z filialingizdagi arizalarni o'chira olasiz.")
-        elif user.role == CustomUser.CUSTOMER and instance.user != user:
+        # Customer uchun ruxsatlar
+        elif user.role and user.role.name == CustomRole.CUSTOMER and instance.user != user:
             raise PermissionDenied("Siz faqat o'z arizalaringizni o'chira olasiz.")
         instance.delete()
+
 
 
 @extend_schema(
